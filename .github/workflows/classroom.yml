@@ -1,0 +1,46 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Double integer test
+      id: double-integer-test
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Double integer test
+        setup-command: "./setup.sh"
+        command: spim -file double.asm
+        input: '5'
+        expected-output: '10'
+        comparison-method: exact
+        timeout: 1
+        max-score: 1
+    - name: Double integer test - Zero input
+      id: double-integer-test-zero-input
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Double integer test - Zero input
+        setup-command: ''
+        command: spim -file double.asm
+        input: o
+        expected-output: '0'
+        comparison-method: exact
+        timeout: 1
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        DOUBLE-INTEGER-TEST_RESULTS: "${{steps.double-integer-test.outputs.result}}"
+        DOUBLE-INTEGER-TEST-ZERO-INPUT_RESULTS: "${{steps.double-integer-test-zero-input.outputs.result}}"
+      with:
+        runners: double-integer-test,double-integer-test-zero-input
