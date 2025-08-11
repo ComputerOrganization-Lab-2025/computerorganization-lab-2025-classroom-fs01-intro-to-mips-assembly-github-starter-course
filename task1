@@ -1,0 +1,34 @@
+.data
+str1:   .asciiz "Enter an integer value: "
+str2:   .asciiz "Double of the number is: "
+
+.text
+.globl main
+
+main:
+    # Print prompt message
+    li $v0, 4
+    la $a0, str1
+    syscall
+
+    # Read integer input
+    li $v0, 5
+    syscall
+    move $t0, $v0       # store input in $t0
+
+    # TODO: Double the number
+    # add $t1, $t0, $t0
+
+    # Print output message
+    li $v0, 4
+    la $a0, str2
+    syscall
+
+    # TODO: Print the doubled value
+    # li $v0, 1
+    # move $a0, $t1
+    # syscall
+
+    # Exit program
+    li $v0, 10
+    syscall
